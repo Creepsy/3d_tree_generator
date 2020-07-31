@@ -11,8 +11,5 @@ struct vertex {
     friend std::ostream& operator<<(std::ostream& stream, const vertex& v);
 };
 
-struct face {
-    std::vector<vertex> vertices;
-
-    friend std::ostream& operator<<(std::ostream& stream, const face& f);
-};
+typedef std::vector<size_t> face;
+std::ostream& operator<<(std::ostream& stream, const face& f);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "components.h"
+
 class object
 {
 private:
