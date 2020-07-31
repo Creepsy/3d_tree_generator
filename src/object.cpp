@@ -1,9 +1,17 @@
 #include "object.h"
 
-object::object(/* args */)
-{
-}
+std::ostream& operator<<(std::ostream& stream, const object& obj) {
+    stream << "o " << obj.name << std::endl;
 
-object::~object()
-{
+    for(const vertex& v : obj.vertices) {
+        stream << v;
+    }
+
+    stream << "s off" << std::endl;
+
+    for(const face& f : obj.faces) {
+        stream << f;
+    }
+
+    return stream;
 }

@@ -1,14 +1,16 @@
 #pragma once
 
+#include <string>
+
 #include "components.h"
 
-class object
-{
-private:
-    /* data */
-public:
-    object(/* args */);
-    ~object();
+struct object {
+    const std::string name = "unnamed";
+
+    std::vector<vertex> vertices;
+    std::vector<face> faces;
+
+    friend std::ostream& operator<<(std::ostream& stream, const object& obj);
 };
 
 
