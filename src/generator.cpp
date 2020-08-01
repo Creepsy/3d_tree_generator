@@ -4,7 +4,8 @@
 #include "object.h"
 
 //bottom-front-left, bottom-back-left, bottom-back-right, bottom-front-right, top-front-left, top-back-left, top-back-right, top-front-right
-object create_cube(std::string name, vertex bfl, vertex bbl, vertex bbr, vertex bfr, vertex tfl, vertex tbl, vertex tbr, vertex tfr, size_t& current_index);
+object create_cube(std::string name, vec bfl, vec bbl, vec bbr, vec bfr, vec tfl, vec tbl, vec tbr, vec tfr, size_t& current_index);
+object create_line(std::string name, vec start, vec end, size_t& current_index, const double start_width, const double end_width);
 
 int main() {
     std::ofstream output("test_object.obj");
@@ -14,19 +15,17 @@ int main() {
     if(!output.is_open()) return -1;
 
     output << create_cube("test_cube",
-     vertex{0, 0, 0}, vertex{0, 0, 1}, vertex{1, 0, 1}, vertex{1, 0, 0},
-     vertex{0, 7, 0}, vertex{0, 7, 1}, vertex{1, 7, 1}, vertex{1, 7, 0}, index);
+     vec{0, 0, 0}, vec{0, 0, 1}, vec{1, 0, 1}, vec{1, 0, 0},
+     vec{0, 7, 0}, vec{0, 7, 1}, vec{1, 7, 1}, vec{1, 7, 0}, index);
 
-    output << create_cube("test_cube2",
-     vertex{0, 7, 0}, vertex{0, 7, 1}, vertex{1, 7, 1}, vertex{1, 7, 0},
-     vertex{3, 11, 6}, vertex{3, 11, 7}, vertex{4, 11, 7}, vertex{4, 11, 6}, index);
+    output << create_line("test", vec{0.5, 7, 0.5}, vec{2, 11, -1}, index, 0.5, 0.25);
     
     output.close();
     
     return 0;
 }
 
-object create_cube(std::string name, vertex bfl, vertex bbl, vertex bbr, vertex bfr, vertex tfl, vertex tbl, vertex tbr, vertex tfr, size_t& current_index) {
+object create_cube(std::string name, vec bfl, vec bbl, vec bbr, vec bfr, vec tfl, vec tbl, vec tbr, vec tfr, size_t& current_index) {
     object cube{name};
 
     cube.vertices.push_back(bfl);
@@ -49,4 +48,27 @@ object create_cube(std::string name, vertex bfl, vertex bbl, vertex bbr, vertex 
     current_index += 8;
 
     return cube;
+}
+
+object create_line(std::string name, vec start, vec end, size_t& current_index, const double start_width, const double end_width) {
+    vec direction = (start - end).normalize();
+    vec orthogonal_0 = direction.cross_product(vec{-1, -1, -1}).normalize();
+    vec orthogonal_1 = orthogonal_0.cross_product(direction).normalize();
+
+    /*vec bfl = start - orthogonal_0 * start_width + orthogonal_1 * start_width;
+    vec bbl = start - orthogonal_0 * start_width - orthogonal_1 * start_width;
+    vec bbr = start + orthogonal_0 * start_width - orthogonal_1 * start_width;
+    vec bfr = start + orthogonal_0 * start_width + orthogonal_1 * start_width;*/
+    
+    vec bfl = vec{start.x - start_width, start.y, start.z - start_width};
+    vec bbl = vec{start.x - start_width, start.y, start.z + start_width};
+    vec bbr = vec{start.x + start_width, start.y, start.z + start_width};
+    vec bfr = vec{start.x + start_width, start.y, start.z - start_width};
+
+    vec tfl = end - orthogonal_0 * end_width + orthogonal_1 * end_width;
+    vec tbl = end - orthogonal_0 * end_width - orthogonal_1 * end_width;
+    vec tbr = end + orthogonal_0 * end_width - orthogonal_1 * end_width;
+    vec tfr = end + orthogonal_0 * end_width + orthogonal_1 * end_width;
+
+    return create_cube(name, bfl, bbl, bbr, bfr, tfl, tbl, tbr, tfr, current_index);
 }

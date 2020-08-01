@@ -3,7 +3,7 @@
 std::ostream& operator<<(std::ostream& stream, const object& obj) {
     stream << "o " << obj.name << std::endl;
 
-    for(const vertex& v : obj.vertices) {
+    for(const vec& v : obj.vertices) {
         stream << v;
     }
 
