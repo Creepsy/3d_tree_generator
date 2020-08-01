@@ -42,15 +42,25 @@ object create_cube(std::string name, vec bfl, vec bbl, vec bbr, vec bfr, vec tfl
     return cube;
 }
 
-object create_line(std::string name, vec start, vec end, size_t& current_index, const double start_width, const double end_width) {
+object create_branch(std::string name, vec start, vec end, size_t& current_index, const double start_width, const double end_width) {
     vec direction = (start - end).normalize();
-    vec orthogonal_0 = direction.cross_product(vec{-1, -1, -1}).normalize();
+    vec orthogonal_0 = direction.cross_product(vec{0, 1, 0}).normalize();
     vec orthogonal_1 = orthogonal_0.cross_product(direction).normalize();
 
-    vec bfl = vec{start.x - start_width, start.y, start.z - start_width};
+    vec bfl = start - orthogonal_0 * start_width + orthogonal_1 * start_width;
+    vec bbl = start - orthogonal_0 * start_width - orthogonal_1 * start_width;
+    vec bbr = start + orthogonal_0 * start_width - orthogonal_1 * start_width;
+    vec bfr = start + orthogonal_0 * start_width + orthogonal_1 * start_width;
+
+    /*vec bfl = vec{start.x - start_width, start.y, start.z - start_width};
     vec bbl = vec{start.x - start_width, start.y, start.z + start_width};
     vec bbr = vec{start.x + start_width, start.y, start.z + start_width};
-    vec bfr = vec{start.x + start_width, start.y, start.z - start_width};
+    vec bfr = vec{start.x + start_width, start.y, start.z - start_width};*/
+
+    /*vec tfl = end - orthogonal_0 * end_width + orthogonal_1 * end_width;
+    vec tbl = end - orthogonal_0 * end_width - orthogonal_1 * end_width;
+    vec tbr = end + orthogonal_0 * end_width - orthogonal_1 * end_width;
+    vec tfr = end + orthogonal_0 * end_width + orthogonal_1 * end_width;*/
 
     vec tfl = end - orthogonal_0 * end_width + orthogonal_1 * end_width;
     vec tbl = end - orthogonal_0 * end_width - orthogonal_1 * end_width;
