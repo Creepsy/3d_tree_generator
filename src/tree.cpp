@@ -34,14 +34,13 @@ void tree::add_branch(const tree_config& config, size_t depth, double thickness,
     vec end = this -> point_by_rotation(position, rotation_x, rotation_y, branch_length);
 
     this -> branches.push_back(create_branch("branch_" + std::to_string(this -> branches.size()), position, end, index, thickness, thickness));
-
     this -> add_branch(config, ++depth, thickness - this -> rand_range(config.thickness_decrease_min, config.thickness_decrease_max),
      branch_length - this -> rand_range(config.length_decrease_min, config.length_decrease_max), rotation_x + this -> rand_range(config.min_rotation, config.max_rotation), 
      rotation_y + this -> rand_range(config.min_rotation, config.max_rotation), end, index);
-
-    this -> add_branch(config, ++depth, thickness - this -> rand_range(config.thickness_decrease_min, config.thickness_decrease_max),
+    this -> add_branch(config, depth, thickness - this -> rand_range(config.thickness_decrease_min, config.thickness_decrease_max),
      branch_length - this -> rand_range(config.length_decrease_min, config.length_decrease_max), rotation_x + this -> rand_range(config.min_rotation, config.max_rotation), 
      rotation_y + this -> rand_range(config.min_rotation, config.max_rotation), end, index);
+
 }
 
 vec tree::point_by_rotation(const vec& origin, double rotation_x, double rotation_y, double length) {
